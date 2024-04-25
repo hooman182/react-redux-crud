@@ -1,11 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import { removeUser } from "./usersSlice";
 
-export default () => {
+export default (props) => {
     const { users } = useSelector((state) => state.users);
     const dispatch = useDispatch();
 
-    function editBtn(id) {}
+    function editBtn(id) {
+        props.updateForm({ id, update: true });
+    }
 
     return (
         <div>

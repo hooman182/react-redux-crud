@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 const usersList = [
     {
@@ -28,10 +28,22 @@ const usersSlice = createSlice({
             state.users = state.users.filter(user => user.id != action.payload)
         },
         updateUser: (state,action) => {
-            
+            state.users = state.users.map((user) => {
+
+                if (user.id == action.payload.id) {
+                    return {
+                        name: action.payload.name,
+                        username: action.payload.username,
+                        email: action.payload.email
+                    }
+                } else {
+                    return user
+                }
+
+            })
         },
     },
 });
 
-export const {addNewUser, removeUser} = usersSlice.actions
+export const {addNewUser, removeUser, updateUser} = usersSlice.actions
 export default usersSlice.reducer
