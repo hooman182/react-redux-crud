@@ -1,5 +1,4 @@
 import Users from "../features/users/Users";
-import "./App.scss";
 
 function App() {
     return (

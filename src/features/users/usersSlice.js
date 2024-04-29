@@ -1,49 +1,77 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 
-const usersList = [
-    {
-        id: 1,
-        name: "Leanne Graham",
-        username: "Bret",
-        email: "Sincere@april.biz",
-    },
-    {
-        id: 2,
-        name: "Ervin Howell",
-        username: "Antonette",
-        email: "Shanna@melissa.tv",
-    },
-];
+export const readUsers = createAsyncThunk("users", async () => {
+    const data = await axios.get("users").then((res) => res.data);
+    return data;
+});
+
+export const createUser = createAsyncThunk("users/add", async (item) => {
+    const res = await axios.post("users", item).then((res) => res);
+    console.log(res);
+    return res;
+});
+
+export const deleteUser = createAsyncThunk("users/delete", async (id) => {
+    const res = await axios.delete("users/" + id).then((res) => res);
+    return res;
+});
+
+export const updateUser = createAsyncThunk("users/put", async (data) => {
+    const res = await axios
+        .put("users/" + data.id, {
+            name: data.name,
+            username: data.username,
+            email: data.email,
+        })
+        .then((res) => res.data)
+        .catch((err) => console.log(err));
+    return res;
+});
 
 const usersSlice = createSlice({
     name: "users",
     initialState: {
-        users: usersList,
+        users: [],
+        loading: false,
+        error: false,
+        response: {},
+        search: ''
     },
-    reducers: {
-        addNewUser: (state, action) => {
-            state.users = [...state.users, action.payload];
-        },
-        removeUser: (state, action) => {
-            state.users = state.users.filter(user => user.id != action.payload)
-        },
-        updateUser: (state,action) => {
-            state.users = state.users.map((user) => {
+    extraReducers: (builder) => {
+        /* read users api */
+        builder.addCase(readUsers.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(readUsers.fulfilled, (state, action) => {
+            state.users = action.payload;
+            state.loading = false;
+        });
+        builder.addCase(readUsers.rejected, (state) => {
+            state.error = true;
+            state.loading = false;
+        });
 
-                if (user.id == action.payload.id) {
-                    return {
-                        name: action.payload.name,
-                        username: action.payload.username,
-                        email: action.payload.email
-                    }
-                } else {
-                    return user
-                }
+        /* create user api */
+        builder.addCase(createUser.pending, (state, action) => {
+            state.loading = true;
+        });
+        builder.addCase(createUser.fulfilled, (state, action) => {
+            state.response = action.payload;
+            state.loading = false;
+        });
 
-            })
-        },
+        /* delete user api */
+        builder.addCase(deleteUser.fulfilled, (state, action) => {
+            state.response = action.payload;
+            console.log(state.response);
+        });
+
+        builder.addCase(updateUser.fulfilled, (state, action) => {
+            state.response = action.payload;
+            console.log(state.response);
+        });
     },
 });
 
-export const {addNewUser, removeUser, updateUser} = usersSlice.actions
-export default usersSlice.reducer
+export default usersSlice.reducer;

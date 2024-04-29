@@ -1,67 +1,33 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-        "Helvetica Neue", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    width: 100%;
-    height: 100vh;
-}
-
-input {
-    padding: 1em;
-    border-radius: 0.5em;
-    border: none;
-}
-
-button {
-    cursor: pointer;
-    padding: 0.75em 1.25em;
-    border: none;
-    border-radius: 0.5em;
-    margin: 1em 0;
-    font-weight: 600;
-    font-size: 1rem;
-}
-
-table {
-    width: 60%;
-    font-size: 1.25rem;
-    text-align: left;
-    border-collapse: collapse;
-    margin: 1em;
+@layer base {
 
     button {
-        background: #009879;
-        color: #fff;
+        @apply px-4 py-2  font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2  tracking-wide cursor-pointer;
     }
-
-    thead {
-        th {
-            padding: 0.75em;
-            background: #009879;
-            color: #fff;
-        }
-    }
-
-    tbody {
-        tr {
-            border-bottom: 1px solid #dddddd;
-            &:nth-of-type(even) {
-                background: #f3f3f3;
-            }
-            &:last-of-type {
-                border-bottom: 2px solid #009879;
-            }
-        }
+    tr {
         td {
-            padding: 0 0.75em;
+            @apply px-5 py-5 border-b border-gray-200 bg-white text-sm;
         }
+    }
+}
+
+@layer components { 
+    .btn {
+        @apply rounded-md;
+        &-indigo {
+            @apply bg-indigo-600 hover:bg-indigo-500 focus-visible:outline-indigo-600 text-white;
+        }
+    }
+    .label-form {
+        @apply block text-sm font-medium leading-6 text-gray-900;
+    }
+    .input {
+        @apply block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6;
+    }
+    .modal {
+        @apply fixed top-0 left-0 w-full h-full bg-black/50 flex justify-center items-center;
     }
 }

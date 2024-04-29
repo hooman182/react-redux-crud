@@ -1,23 +1,32 @@
-import "./Users.scss";
-import UserList from "./UserList";
-import UserAddForm from "./UserAddForm";
-import UserUpdateForm from "./UserUpdateForm";
-import { useState } from "react";
+import UserList from "./components/UserList";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import FormModal from "./components/FormModal";
+import { readUsers } from "./usersSlice";
 
 export default () => {
-    const [update, setUpdate] = useState(false);
+    const [formType, setFormType] = useState("new");
     const [id, setId] = useState(0);
+    const [isModal, setIsModal] = useState(false);
+    const dispatch = useDispatch();
 
-    function handleUpdateForm({ id, update }) {
-        setUpdate(update);
-        setId(id);
+    function handleModal(bind) {
+        setIsModal(bind.isModal);
+        setFormType(bind.formType);
+        setId(bind.id);
     }
+
+    useEffect(() => {
+        dispatch(readUsers());
+    }, []);
 
     return (
         <div className="users">
-            <UserAddForm />
-            <UserList updateForm={handleUpdateForm} />
-            {update && <UserUpdateForm updateForm={handleUpdateForm} id={id}/>}
+            <UserList modal={handleModal} />
+
+            {isModal && (
+                <FormModal modal={handleModal} type={formType} id={id} />
+            )}
         </div>
     );
 };
